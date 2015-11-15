@@ -7,6 +7,9 @@ Handles completion and errors for callbacks, promises, observables, child proces
 
 Will run call the function on `nextTick`. This will cause all functions to be async.
 
+## asyncDone Fork
+This is a fork of asyncDone with sync functionality added. Thanks for the hard work at [gulpjs/async-done](https://github.com/gulpjs/async-done) 
+
 ## Usage
 
 ### Successful completion
