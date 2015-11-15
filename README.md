@@ -7,6 +7,9 @@ Handles completion and errors for callbacks, promises, observables, child proces
 
 Will run call the function on `nextTick`. This will cause all functions to be async.
 
+## Why?
+You are given a callback and want to know when it's finished. I found it useful for a testing framework. Specifically, I needed to know when the test had finished.
+
 ## asyncDone Fork
 This is a fork of asyncDone with sync functionality added. Thanks for the hard work at [gulpjs/async-done](https://github.com/gulpjs/async-done) 
 
@@ -17,9 +20,18 @@ This is a fork of asyncDone with sync functionality added. Thanks for the hard w
 ```js
 var funcDone = require('function-done');
 
+// Async example
 funcDone(function(done){
-  // do sync or async things
+  // do async things
   done(null, 2);
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+
+// Sync Example
+funcDone(function(){
+  return 2
 }, function(error, result){
   // `error` will be null on successful execution of the first function.
   // `result` will be the result from the first function.
