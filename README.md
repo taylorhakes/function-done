@@ -1,7 +1,7 @@
-async-done
+function-done
 ==========
 
-[![build status](https://secure.travis-ci.org/gulpjs/async-done.png)](http://travis-ci.org/gulpjs/async-done)
+[![build status](https://secure.travis-ci.org/taylorhakes/function-done.png)](http://travis-ci.org/taylorhakes/function-done)
 
 Handles completion and errors for callbacks, promises, observables, child processes and streams.
 
@@ -15,7 +15,7 @@ Will run call the function on `nextTick`. This will cause all functions to be as
 var asyncDone = require('async-done');
 
 asyncDone(function(done){
-  // do async things
+  // do sync or async things
   done(null, 2);
 }, function(error, result){
   // `error` will be null on successful execution of the first function.
@@ -45,10 +45,13 @@ Takes a function to execute (`fn`) and a function to call on completion (`callba
 
 #### `fn([done])`
 
-Optionally takes a callback to call when async tasks are complete.
+Optionally takes a callback to call when async tasks are complete. If done parameter is not defined and function
+doesn't return Stream, Child Process, Promise or Observable, the function is assume to be synchronous
 
 #### Completion and Error Resolution
-
+* `Sync` function (function takes 0 params and doesn't return any of the below types)
+  - Completion: function completes
+  - Error: Error thrown
 * `Callback` called
   - Completion: called with null error
   - Error: called with non-null error
@@ -65,7 +68,6 @@ Optionally takes a callback to call when async tasks are complete.
   - Completion: [onCompleted](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypesubscribeobserver--onnext-onerror-oncompleted) method called
   - Error: [onError](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypesubscribeobserver--onnext-onerror-oncompleted) method called
 
-__Warning:__ Sync tasks are __not supported__ and your function will never complete if the one of the above strategies is not used to signal completion. However, thrown errors will be caught by the domain.
 
 #### `callback(error, result)`
 

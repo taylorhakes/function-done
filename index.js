@@ -12,6 +12,7 @@ var eosConfig = {
 };
 
 function asyncDone(fn, cb) {
+  var paramCount = fn.length;
   cb = once(cb);
 
   var d = domain.create();
@@ -60,6 +61,10 @@ function asyncDone(fn, cb) {
       // Assume promise
       result.then(onSuccess, onError);
       return;
+    }
+
+    if (paramCount === 0) {
+      onSuccess(result);
     }
   }
 

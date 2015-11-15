@@ -15,7 +15,7 @@ function failure(cb) {
   cb(new Error('Callback Error'));
 }
 
-function neverDone() {
+function neverDone(done) {
   return 2;
 }
 

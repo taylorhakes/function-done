@@ -1,14 +1,15 @@
 {
-  "name": "async-done",
-  "version": "1.2.0",
-  "description": "Handles completion and errors for callbacks, promises, observables and streams.",
-  "author": "Blaine Bublitz <blaine@iceddev.com> (http://iceddev.com/)",
+  "name": "function-done",
+  "version": "1.0.0",
+  "description": "Handles completion and errors for sync, callbacks, promises, observables and streams.",
+  "author": "Tayor Hakes (https://taylorhakes.com)",
   "contributors": [
+    "Taylor Hakes (https://taylorhakes.com)",
     "Blaine Bublitz <blaine@iceddev.com> (http://iceddev.com/)",
     "Pawel Kozlowski <pkozlowski.opensource@gmail.com>",
     "Matthew Podwysocki <matthew.podwysocki@gmail.com>"
   ],
-  "repository": "gulpjs/async-done",
+  "repository": "taylorhakes/function-done",
   "license": "MIT",
   "engines": {
     "node": ">= 0.10"
