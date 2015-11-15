@@ -12,9 +12,9 @@ Will run call the function on `nextTick`. This will cause all functions to be as
 ### Successful completion
 
 ```js
-var asyncDone = require('async-done');
+var funcDone = require('function-done');
 
-asyncDone(function(done){
+funcDone(function(done){
   // do sync or async things
   done(null, 2);
 }, function(error, result){
@@ -26,9 +26,9 @@ asyncDone(function(done){
 ### Failed completion
 
 ```js
-var asyncDone = require('async-done');
+var funcDone = require('function-done');
 
-asyncDone(function(done){
+funcDone(function(done){
   // do async things
   done(new Error('Some Error Occurred'));
 }, function(error, result){
@@ -39,7 +39,7 @@ asyncDone(function(done){
 
 ## API
 
-### `asyncDone(fn, callback)`
+### `funcDone(fn, callback)`
 
 Takes a function to execute (`fn`) and a function to call on completion (`callback`).
 

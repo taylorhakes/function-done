@@ -11,7 +11,7 @@ var eosConfig = {
   error: false,
 };
 
-function asyncDone(fn, cb) {
+function functionDone(fn, cb) {
   var paramCount = fn.length;
   cb = once(cb);
 
@@ -71,4 +71,4 @@ function asyncDone(fn, cb) {
   tick(asyncRunner);
 }
 
-module.exports = asyncDone;
+module.exports = functionDone;
