@@ -3,7 +3,7 @@ function-done
 
 [![build status](https://secure.travis-ci.org/taylorhakes/function-done.png)](http://travis-ci.org/taylorhakes/function-done)
 
-Handles completion and errors for callbacks, promises, observables, child processes and streams.
+Handles completion and errors for standard functions, generators, async functions, callbacks, promises, observables, child processes and streams.
 
 Will run call the function on `nextTick`. This will cause all functions to be async.
 
@@ -11,46 +11,7 @@ Will run call the function on `nextTick`. This will cause all functions to be as
 You are given a callback and want to know when it's finished. I found it useful for a testing framework. Specifically, I needed to know when the test had finished.
 
 ## asyncDone Fork
-This is a fork of asyncDone with sync functionality added. Thanks for the hard work at [gulpjs/async-done](https://github.com/gulpjs/async-done) 
-
-## Usage
-
-### Successful completion
-
-```js
-var funcDone = require('function-done');
-
-// Async example
-funcDone(function(done){
-  // do async things
-  done(null, 2);
-}, function(error, result){
-  // `error` will be null on successful execution of the first function.
-  // `result` will be the result from the first function.
-});
-
-// Sync Example
-funcDone(function(){
-  return 2
-}, function(error, result){
-  // `error` will be null on successful execution of the first function.
-  // `result` will be the result from the first function.
-});
-```
-
-### Failed completion
-
-```js
-var funcDone = require('function-done');
-
-funcDone(function(done){
-  // do async things
-  done(new Error('Some Error Occurred'));
-}, function(error, result){
-  // `error` will be an error from the first function.
-  // `result` will be undefined on failed execution of the first function.
-});
-```
+This is a fork of asyncDone with sync and generator functionality added. Thanks for the hard work at [gulpjs/async-done](https://github.com/gulpjs/async-done)
 
 ## API
 
@@ -61,7 +22,196 @@ Takes a function to execute (`fn`) and a function to call on completion (`callba
 #### `fn([done])`
 
 Optionally takes a callback to call when async tasks are complete. If done parameter is not defined and function
-doesn't return Stream, Child Process, Promise or Observable, the function is assume to be synchronous
+doesn't return Stream, Child Process, Promise, Observable, and is not a generator function, the function is assumed to be synchronous
+
+## Usage
+
+### Successful completion
+
+#### Callback
+```js
+
+// Async example
+funcDone(function(done){
+
+  // do async things
+  setTimeout(function() {
+
+    // Call done function on finish
+    done(null, 2);
+  }, 10);
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+
+#### Stream
+```js
+funcDone(function(){
+
+ // return Stream. emit end of finish
+ var read = fs.createReadStream(exists);
+ return read.pipe(new EndStream());
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+#### Generator
+```js
+funcDone(function* (){
+  function delay(time) {
+    return new Promise(function (resolve) {
+       setTimeout(resolve, time);
+    });
+  }
+
+  // yield as many times as necessary
+  yield delay(10);
+  yield delay(100);
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+#### Promise
+```js
+funcDone(function (){
+  function delay(time) {
+    return new Promise(function (resolve) {
+       setTimeout(resolve, time);
+    });
+  }
+
+  // return a Promise from the function
+  return delay(10).then(function() {
+    return delay(100);
+  });
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+
+#### Async Function
+```js
+funcDone(async function (){
+  function delay(time) {
+    return new Promise(function (resolve) {
+       setTimeout(resolve, time);
+    });
+  }
+
+  // return a Promise from the function
+  await delay(10);
+  await delay(100);
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+#### Child Process
+```js
+funcDone(function(){
+
+  // return child process from the function
+  return cp.exec('echo hello world');
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+#### Sync
+```js
+funcDone(function(){
+  return 2
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+
+### Failed completion
+
+#### Callback
+```js
+
+// Async example
+funcDone(function(done){
+
+  // do async things
+  setTimeout(function() {
+
+    // Call done function on finish
+    done(new Error('An Error Occurred'));
+  }, 10);
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+
+#### Stream
+```js
+funcDone(function(){
+
+ // return Stream. emit end of finish
+ var read = fs.createReadStream(notExists);
+ return read.pipe(new EndStream());
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+#### Generator
+```js
+funcDone(function* (){
+  throw new Error('Generator error');
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+#### Promise
+```js
+funcDone(function (){
+  return Promise.reject(new Error('Rejected Promise'));
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+
+#### Async Function
+```js
+funcDone(async function (){
+  throw new Error('Async Error');
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+#### Child Process
+```js
+funcDone(function(){
+
+  // return child process error from the function
+  return cp.exec('not-an-executable hello world');
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
+#### Sync
+```js
+funcDone(function(){
+  throw new Error('function error');
+}, function(error, result){
+  // `error` will be null on successful execution of the first function.
+  // `result` will be the result from the first function.
+});
+```
 
 #### Completion and Error Resolution
 * `Sync` function (function takes 0 params and doesn't return any of the below types)
@@ -73,10 +223,13 @@ doesn't return Stream, Child Process, Promise or Observable, the function is ass
 * `Stream` or `EventEmitter` returned
   - Completion: [end-of-stream](https://www.npmjs.org/package/end-of-stream) module
   - Error: [domains](http://nodejs.org/api/domain.html)
+* `Generator` returned
+  - Completion: function completes
+  - Error: Error thrown
 * `Child Process` returned
   - Completion [end-of-stream](https://www.npmjs.org/package/end-of-stream) module
   - Error: [domains](http://nodejs.org/api/domain.html)
-* `Promise` returned
+* `Promise` returned (Async Function)
   - Completion: [onFulfilled](http://promisesaplus.com/#point-26) method called
   - Error: [onRejected](http://promisesaplus.com/#point-30) method called
 * `Observable` returned

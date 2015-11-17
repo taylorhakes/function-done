@@ -3,12 +3,13 @@
 var domain = require('domain');
 
 var eos = require('end-of-stream');
-var tick = require('next-tick');
+var setAsap = require('setasap');
+var co = require('co-with-promise');
 var once = require('once');
 var exhaust = require('stream-exhaust');
 
 var eosConfig = {
-  error: false,
+  error: false
 };
 
 function functionDone(fn, cb) {
@@ -44,31 +45,44 @@ function functionDone(fn, cb) {
       return onSuccess(onNext.state);
     }
 
-    if (result && typeof result.on === 'function') {
-      // Assume node stream
-      d.add(result);
-      eos(exhaust(result), eosConfig, done);
-      return;
+    if (result) {
+      if (typeof result.on === 'function') {
+
+        // Assume node stream
+        d.add(result);
+        eos(exhaust(result), eosConfig, done);
+        return;
+      }
+
+      if (typeof result.subscribe === 'function') {
+
+        // Assume RxJS observable
+        result.subscribe(onNext, onError, onCompleted);
+        return;
+      }
+
+      if (typeof result.then === 'function') {
+
+        // Assume promise
+        result.then(onSuccess, onError);
+        return;
+      }
+
+      if (typeof result.next === 'function' && typeof result.throw === 'function') {
+
+        // Assume generator
+        co(result).then(onSuccess, onError);
+        return;
+      }
     }
 
-    if (result && typeof result.subscribe === 'function') {
-      // Assume RxJS observable
-      result.subscribe(onNext, onError, onCompleted);
-      return;
-    }
-
-    if (result && typeof result.then === 'function') {
-      // Assume promise
-      result.then(onSuccess, onError);
-      return;
-    }
 
     if (paramCount === 0) {
       onSuccess(result);
     }
   }
 
-  tick(asyncRunner);
+  setAsap(asyncRunner);
 }
 
 module.exports = functionDone;

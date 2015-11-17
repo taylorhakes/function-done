@@ -10,7 +10,7 @@ var cp = require('child_process');
 var path = require('path');
 var through = require('through2');
 
-var asyncDone = require('../');
+var funcDone = require('../');
 
 var exists = path.join(__dirname, '../.gitignore');
 var notExists = path.join(__dirname, '../not_exists');
@@ -39,21 +39,21 @@ function unpiped() {
 
 describe('streams', function() {
   it('should handle a successful stream', function(done) {
-    asyncDone(success, function(err) {
+    funcDone(success, function(err) {
       expect(err).to.not.be.instanceof(Error);
       done();
     });
   });
 
   it('should handle an errored stream', function(done) {
-    asyncDone(failure, function(err) {
+    funcDone(failure, function(err) {
       expect(err).to.be.instanceof(Error);
       done();
     });
   });
 
   it('handle a returned stream and cb by only calling callback once', function(done) {
-    asyncDone(function(cb) {
+    funcDone(function(cb) {
       return success().on('end', function() {
         cb(null, 3);
       });
@@ -65,7 +65,7 @@ describe('streams', function() {
   });
 
   it('consumes an unpiped readable stream', function(done) {
-    asyncDone(unpiped, function(err) {
+    funcDone(unpiped, function(err) {
       expect(err).to.not.be.instanceof(Error);
       done();
     });

@@ -5,7 +5,7 @@ var describe = lab.describe;
 var it = lab.it;
 var expect = require('code').expect;
 
-var asyncDone = require('../');
+var funcDone = require('../');
 
 var Observable = require('rx').Observable;
 
@@ -24,21 +24,21 @@ function failure() {
 describe('observables', function() {
 
   it('should handle a finished observable', function(done) {
-    asyncDone(success, function(err, result) {
+    funcDone(success, function(err, result) {
       expect(result).to.equal(undefined);
       done(err);
     });
   });
 
   it('should handle a finished observable with value', function(done) {
-    asyncDone(successValue, function(err, result) {
+    funcDone(successValue, function(err, result) {
       expect(result).to.equal(42);
       done(err);
     });
   });
 
   it('should handle an errored observable', function(done) {
-    asyncDone(failure, function(err) {
+    funcDone(failure, function(err) {
       expect(err).to.be.instanceof(Error);
       done();
     });

@@ -5,7 +5,7 @@ var describe = lab.describe;
 var it = lab.it;
 var expect = require('code').expect;
 
-var asyncDone = require('../');
+var funcDone = require('../');
 
 function success() {
   return 2;
@@ -17,13 +17,13 @@ function failure() {
 
 describe('sync', function() {
   it('should handle simple return', function(done) {
-    asyncDone(success, function(err, result) {
+    funcDone(success, function(err, result) {
       expect(result).to.equal(2);
       done(err);
     });
   });
   it('should handle a thrown error', function(done) {
-    asyncDone(failure, function(err) {
+    funcDone(failure, function(err) {
       expect(err).to.be.instanceof(Error);
       done();
     });

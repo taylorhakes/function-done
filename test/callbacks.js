@@ -5,7 +5,7 @@ var describe = lab.describe;
 var it = lab.it;
 var expect = require('code').expect;
 
-var asyncDone = require('../');
+var funcDone = require('../');
 
 function success(cb) {
   cb(null, 2);
@@ -22,21 +22,21 @@ function neverDone(done) {
 describe('callbacks', function() {
 
   it('should handle a successful callback', function(done) {
-    asyncDone(success, function(err, result) {
+    funcDone(success, function(err, result) {
       expect(result).to.equal(2);
       done(err);
     });
   });
 
   it('should handle an errored callback', function(done) {
-    asyncDone(failure, function(err) {
+    funcDone(failure, function(err) {
       expect(err).to.be.instanceof(Error);
       done();
     });
   });
 
   it('a function that takes an argument but never calls callback', function(done) {
-    asyncDone(neverDone, function() {
+    funcDone(neverDone, function() {
       done(new Error('Callback called'));
     });
 
@@ -53,7 +53,7 @@ describe('callbacks', function() {
     });
 
     d.run(function() {
-      asyncDone(success, function() {
+      funcDone(success, function() {
         throw new Error('Thrown Error');
       });
     });
