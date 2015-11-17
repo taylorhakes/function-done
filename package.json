@@ -24,6 +24,7 @@
     "test": "lab -cv"
   },
   "dependencies": {
+    "co-with-promise": "^4.6.0",
     "end-of-stream": "^1.1.0",
     "once": "^1.3.2",
     "setasap": "^1.0.1",
