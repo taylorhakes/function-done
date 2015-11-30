@@ -56,8 +56,15 @@ function functionDone(fn, cb) {
 
       if (typeof result.subscribe === 'function') {
 
-        // Assume RxJS observable
-        result.subscribe(onNext, onError, onCompleted);
+        // Compat with RX and ES Observables
+        result.subscribe({
+          next: onNext,
+          error: onError,
+          complete: onCompleted,
+          onNext: onNext,
+          onError: onError,
+          onCompleted: onCompleted
+        });
         return;
       }
 
