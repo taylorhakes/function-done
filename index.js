@@ -89,7 +89,7 @@ function functionDone(fn, cb) {
     }
   }
 
-  setAsap(asyncRunner);
+  asyncRunner();
 }
 
 module.exports = functionDone;
