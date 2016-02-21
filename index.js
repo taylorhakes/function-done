@@ -17,21 +17,30 @@ function functionDone(fn, cb) {
   cb = once(cb);
 
   var d = domain.create();
+  var calledCb = false;
   d.once('error', onError);
   var domainBoundFn = d.bind(fn);
 
   function done() {
+    // Avoid calling callback twice
+    if (calledCb) {
+      return;
+    }
+
+    var args = arguments;
+
     d.removeListener('error', onError);
     d.exit();
-    return cb.apply(null, arguments);
+    calledCb = true;
+    cb.apply(undefined, args);
   }
 
   function onSuccess(result) {
-    return done(null, result);
+    done(null, result);
   }
 
   function onError(error) {
-    return done(error);
+    done(error);
   }
 
   function asyncRunner() {

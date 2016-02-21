@@ -5,8 +5,6 @@ var describe = lab.describe;
 var it = lab.it;
 var expect = require('code').expect;
 
-var when = require('when');
-
 var funcDone = require('../');
 
 function* success () {
