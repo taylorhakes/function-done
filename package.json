@@ -1,6 +1,6 @@
 {
   "name": "function-done",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Handles completion and errors for sync, callbacks, promises, observables and streams.",
   "author": "Tayor Hakes (https://taylorhakes.com)",
   "contributors": [
@@ -27,7 +27,7 @@
     "co-with-promise": "^4.6.0",
     "end-of-stream": "^1.1.0",
     "once": "^1.3.2",
-    "setasap": "^1.0.1",
+    "setasap": "^2.0.0",
     "stream-exhaust": "^1.0.1"
   },
   "devDependencies": {
